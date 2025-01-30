@@ -5,11 +5,20 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Build the Windows App
-        run: dotnet publish -f net8.0-windows10.0.19041.0 -c Release
+        run: dotnet publish -f net8.0-windows10.0.19041.0 -c Release -o $(Build.ArtifactStagingDirectory)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-app-artifact
+          path: $(Build.ArtifactStagingDirectory)
